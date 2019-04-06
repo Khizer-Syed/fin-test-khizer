@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+}
+
+.container > * {
+    width: 50%;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.table {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.heading {
+    border: 1px solid black;
+}
+
+td {
+    border: 1px dotted black;
+}
+
+.form-container {
+    padding: 5px;
+}
