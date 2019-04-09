@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { User } from './model/user.model';
 
-interface User {
-    _id: string,
-    name: string,
-    age: number
-}
 @Injectable()
 export class DataService {
     apiUrl: string = 'http://localhost:3002/api/user';
@@ -18,11 +14,11 @@ export class DataService {
         return this._http.delete(this.apiUrl + '/' + id);
     }
 
-    addUser(user) {
+    addUser(user: User) {
         return this._http.post(this.apiUrl, user)
     }
 
-    updateUser(id, user) {
+    updateUser(id, user: User) {
         return this._http.patch(this.apiUrl + '/' + id, user);
     }
 }

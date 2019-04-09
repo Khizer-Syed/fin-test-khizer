@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <section class="details">
     <table class="table">
       <th class="heading" *ngFor="let column of tableColumns">{{column}}</th>
@@ -36,5 +36,36 @@
           </form>
     </ng-container> 
 
+  </section>
+</div> -->
+
+
+<div class="container">
+  <section class="details">
+    <table class="table">
+      <th class="heading" *ngFor="let column of tableColumns">{{column}}</th>
+      <tr  *ngFor="let user of users;let i = index">
+        <td>{{ user._id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.age }}</td>
+        <td>
+            <button type="button" (click)="editUser(user._id, i)">EDIT</button>
+            <button type="button" (click)="deleteUser(user._id)">DELETE</button>  
+        </td>
+      </tr>
+    </table>
+    <button type="button" (click)="showAddUserForm()">Add</button>
+  </section>
+
+  <section class="form-section">
+    <ng-container *ngIf="showForm">
+        <form class="form-container" [formGroup]="userForm" (ngSubmit)="addOrEditUser()">
+            <div *ngIf="editMode">Id: <input type="text" formControlName="id"></div>
+            Name: <input type="text" formControlName="name"><br>
+            Age: <input type="number" formControlName="age"><br>
+            <button type="submit">{{ editMode ? 'Update' : 'Add'}}</button>
+            <button type="button" (click)="showForm = false; editMode = false">Cancel</button>
+          </form>
+    </ng-container> 
   </section>
 </div>
