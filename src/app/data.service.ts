@@ -6,7 +6,7 @@ import { User } from './model/user.model';
 export class DataService {
     apiUrl: string = 'http://localhost:3002/api/user';
     constructor(private _http: HttpClient) {}
-    getUsers () {
+    getUsers() {
         return this._http.get<User[]>(this.apiUrl);
     }
 
@@ -15,10 +15,10 @@ export class DataService {
     }
 
     addUser(user: User) {
-        return this._http.post(this.apiUrl, user)
+        return this._http.post(this.apiUrl, user);
     }
 
-    updateUser(id, user: User) {
+    updateUser(id, user) {
         return this._http.patch(this.apiUrl + '/' + id, user);
     }
 }

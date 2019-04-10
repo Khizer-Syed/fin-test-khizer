@@ -1,5 +1,5 @@
 
 export class User {
-    constructor(private name: string, private age: number, private _id?: string) {
+    constructor(public name: string, public age: number, public _id?: string) {
     }
 }

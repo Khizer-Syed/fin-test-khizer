@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './data.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { User } from './model/user.model';
 import * as _ from 'lodash';
 
@@ -13,13 +13,11 @@ import * as _ from 'lodash';
 export class AppComponent implements OnInit {
   users: User[] = [];
   tableColumns: string[] = ['ID', 'NAME', 'AGE'];
-  editMode: boolean = false;
-  userForm: FormGroup;
-  showForm: boolean = false;
-  editUserId: string = '';
+  editMode = false;
+  showForm = false;
+  selectedUser: User;
 
-  constructor(private _dataService: DataService,
-    private fb: FormBuilder) {
+  constructor(private dataService: DataService) {
 
   }
 
@@ -30,59 +28,49 @@ export class AppComponent implements OnInit {
   }
 
   refresh() {
-    this._dataService.getUsers().subscribe((res) => {
+    this.dataService.getUsers().subscribe((res) => {
       this.users = res;
     });
   }
 
-  showAddUserForm() {
-    this.userForm = this.fb.group({
-      name: '',
-      age: ''
-    });
+  showUserForm() {
+    this.selectedUser = new User('', undefined);
     this.showForm = true;
   }
+  save(form: NgForm) {
+    if (this.editMode) {
+      this.updateUser();
+    } else {
+      this.addUser(form);
+    }
+  }
 
-  deleteUser(id: string) {
-    this._dataService.deleteUser(id).subscribe(() => {
+  deleteUser(id) {
+    this.dataService.deleteUser(id).subscribe(() => {
       this.refresh();
     });
   }
 
-  addOrEditUser() {
-    this.editMode ? this.updateUser() : this.addUser();
-  }
-
-  addUser() {
-    let user = new User(this.userForm.value.name, this.userForm.value.age);
-    this._dataService.addUser(user).subscribe(() => {
+  addUser(form: NgForm) {
+    this.selectedUser = new User(form.value.name, form.value.age);
+    this.dataService.addUser(this.selectedUser).subscribe(() => {
       this.showForm = false;
       this.refresh();
-    })
+    });
   }
 
-  editUser(id: string, index: number) {
-    let user = _.clone(this.users[index]);
-
-    this.editUserId = user._id;
-    this.userForm = this.fb.group({
-      id: this.fb.control({ value: user._id, disabled: true }),
-      name: user.name,
-      age: user.age
-    });
-
+  editUser(user: User) {
+    this.selectedUser = _.cloneDeep(user);
     this.editMode = true;
     this.showForm = true;
   }
-
   updateUser() {
-    this._dataService.updateUser(this.editUserId,
-      new User(this.userForm.value.name, this.userForm.value.age))
+
+    this.dataService.updateUser(this.selectedUser._id, _.omit(this.selectedUser, '_id'))
       .subscribe(() => {
         this.editMode = false;
         this.showForm = false;
-        this.editUserId = '';
         this.refresh();
-      })
+      });
   }
 }
